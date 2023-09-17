@@ -1,11 +1,10 @@
 # EncryptMe - File Encryption and Decryption in Go
 
 ## Problem Statement
+
 Organizations need a reliable tool to protect their sensitive test data. EncryptMe is a simple solution aims to provide a trustworthy mechanism for securing files(text/yaml/json/etc...), ensuring that even if the files fall into the wrong hands, they remain unreadable without the correct decryption key, this also ensures a global standard for data security.
 
-
 EncryptMe is a Go package that provides functions for encrypting and decrypting files using the AES-GCM encryption algorithm. This package allows you to secure the content of your files with a secret key, ensuring that only authorized parties can access the data.
-
 
 ![Alt text](docs\encryptmet.png)
 
@@ -39,7 +38,10 @@ Example:
 import "github.com/dipjyotimetia/encryptme"
 
 func main() {
-    encryptme.EncryptFile("plaintext.txt", "secret.key", "encrypted.bin")
+    err := encryptme.EncryptFile("plaintext.txt", "secret.key", "encrypted.bin")
+    if err != nil {
+        panic(err)
+    }
 }
 ```
 
@@ -57,7 +59,10 @@ Example:
 import "github.com/dipjyotimetia/encryptme"
 
 func main() {
-    encryptme.DecryptFile("encrypted.bin", "secret.key", "decrypted.txt")
+    err := encryptme.DecryptFile("encrypted.bin", "secret.key", "decrypted.txt")
+    if err != nil {
+        panic(err)
+    }
 }
 ```
 
@@ -66,7 +71,3 @@ func main() {
 - Keep your secret key secure. Do not share it with unauthorized users.
 - Ensure that you have proper access control for your secret key file.
 - Use strong and unique secret keys for each encryption operation.
-
-## Contributing
-
-Contributions to EncryptMe are welcome! Feel free to open issues or pull requests if you have any improvements, bug fixes, or feature suggestions.
