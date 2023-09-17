@@ -1,5 +1,7 @@
 # EncryptMe - File Encryption and Decryption in Go
 
+[![Go Test](https://github.com/dipjyotimetia/encryptme/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/dipjyotimetia/encryptme/actions/workflows/test.yaml)
+
 ## Problem Statement
 
 Organizations need a reliable tool to protect their sensitive test data. EncryptMe is a simple solution aims to provide a trustworthy mechanism for securing files(text/yaml/json/etc...), ensuring that even if the files fall into the wrong hands, they remain unreadable without the correct decryption key, this also ensures a global standard for data security.
