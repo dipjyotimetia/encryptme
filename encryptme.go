@@ -9,6 +9,10 @@ import (
 	"os"
 )
 
+// EncryptFile encrypts a file with AES-GCM algorithm
+// contentFile is the file to be encrypted
+// secretKey is the key to encrypt the file
+// exportBin is the file to be exported
 func EncryptFile(contentFile, secretKey, exportBin string) {
 	// Reading plaintext file
 	plainText, err := os.ReadFile(contentFile)
@@ -51,6 +55,10 @@ func EncryptFile(contentFile, secretKey, exportBin string) {
 
 }
 
+// DecryptFile decrypts a file with AES-GCM algorithm
+// importBin is the file to be decrypted
+// secretKey is the key to decrypt the file
+// content is the file to be exported
 func DecryptFile(importBin, secretKey, content string) {
 	// Reading ciphertext file
 	cipherText, err := os.ReadFile(importBin)
