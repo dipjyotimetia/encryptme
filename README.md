@@ -6,7 +6,7 @@ Organizations need a reliable tool to protect their sensitive test data. Encrypt
 
 EncryptMe is a Go package that provides functions for encrypting and decrypting files using the AES-GCM encryption algorithm. This package allows you to secure the content of your files with a secret key, ensuring that only authorized parties can access the data.
 
-![Alt text](docs\encryptmet.png)
+<img src="docs\encryptmet.png" width="700">
 
 ## Features
 
