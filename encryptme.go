@@ -48,8 +48,7 @@ func EncryptFile(contentFile, secretKey, exportBin string) error {
 	cipherText := gcm.Seal(nonce, nonce, plainText, nil)
 
 	// Write ciphertext to the export file
-	err = os.WriteFile(exportBin, cipherText, 0644)
-	if err != nil {
+	if err := os.WriteFile(exportBin, cipherText, 0644); err != nil {
 		return fmt.Errorf("failed to write encrypted file: %w", err)
 	}
 
@@ -98,8 +97,7 @@ func DecryptFile(importBin, secretKey, content string) error {
 	}
 
 	// Write decryption content to the specified file
-	err = os.WriteFile(content, plainText, 0644)
-	if err != nil {
+	if err := os.WriteFile(content, plainText, 0644); err != nil {
 		return fmt.Errorf("failed to write decrypted file: %w", err)
 	}
 
