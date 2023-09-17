@@ -14,44 +14,45 @@ import (
 // secretKey is the key to encrypt the file
 // exportBin is the file to be exported
 func EncryptFile(contentFile, secretKey, exportBin string) error {
-	// Reading plaintext file
+	// Read plaintext file
 	plainText, err := os.ReadFile(contentFile)
 	if err != nil {
-		return fmt.Errorf("read file err: %v", err.Error())
+		return fmt.Errorf("failed to read file: %w", err)
 	}
 
-	// Reading key
+	// Read encryption key
 	key, err := os.ReadFile(secretKey)
 	if err != nil {
-		return fmt.Errorf("read file err: %v", err.Error())
+		return fmt.Errorf("failed to read key file: %w", err)
 	}
 
-	// Creating block of algorithm
+	// Create AES cipher block
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return fmt.Errorf("cipher err: %v", err.Error())
+		return fmt.Errorf("failed to create cipher block: %w", err)
 	}
 
-	// Creating GCM mode
+	// Create GCM mode
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
-		return fmt.Errorf("cipher GCM err: %v", err.Error())
+		return fmt.Errorf("failed to create GCM cipher: %w", err)
 	}
 
-	// Generating random nonce
+	// Generate a random nonce
 	nonce := make([]byte, gcm.NonceSize())
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return fmt.Errorf("nonce  err: %v", err.Error())
+		return fmt.Errorf("failed to generate nonce: %w", err)
 	}
 
-	// Decrypt file
+	// Encrypt the file
 	cipherText := gcm.Seal(nonce, nonce, plainText, nil)
 
-	// Writing ciphertext file
-	err = os.WriteFile(exportBin, cipherText, 0777)
+	// Write ciphertext to the export file
+	err = os.WriteFile(exportBin, cipherText, 0644)
 	if err != nil {
-		return fmt.Errorf("write file err: %v", err.Error())
+		return fmt.Errorf("failed to write encrypted file: %w", err)
 	}
+
 	return nil
 }
 
@@ -60,42 +61,46 @@ func EncryptFile(contentFile, secretKey, exportBin string) error {
 // secretKey is the key to decrypt the file
 // content is the file to be exported
 func DecryptFile(importBin, secretKey, content string) error {
-	// Reading ciphertext file
+	// Read ciphertext file
 	cipherText, err := os.ReadFile(importBin)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("failed to read ciphertext file: %w", err)
 	}
 
-	// Reading key
+	// Read decryption key
 	key, err := os.ReadFile(secretKey)
 	if err != nil {
-		return fmt.Errorf("read file err: %v", err.Error())
+		return fmt.Errorf("failed to read key file: %w", err)
 	}
 
-	// Creating block of algorithm
+	// Create AES cipher block
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return fmt.Errorf("cipher err: %v", err.Error())
+		return fmt.Errorf("failed to create cipher block: %w", err)
 	}
 
-	// Creating GCM mode
+	// Create GCM mode
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
-		return fmt.Errorf("cipher GCM err: %v", err.Error())
+		return fmt.Errorf("failed to create GCM cipher: %w", err)
 	}
 
-	// Deattached nonce and decrypt
-	nonce := cipherText[:gcm.NonceSize()]
-	cipherText = cipherText[gcm.NonceSize():]
+	// Separate nonce and decrypt
+	nonceSize := gcm.NonceSize()
+	if len(cipherText) < nonceSize {
+		return fmt.Errorf("ciphertext is too short")
+	}
+
+	nonce, cipherText := cipherText[:nonceSize], cipherText[nonceSize:]
 	plainText, err := gcm.Open(nil, nonce, cipherText, nil)
 	if err != nil {
-		return fmt.Errorf("decrypt file err: %v", err.Error())
+		return fmt.Errorf("failed to decrypt file: %w", err)
 	}
 
-	// Writing decryption content
-	err = os.WriteFile(content, plainText, 0777)
+	// Write decryption content to the specified file
+	err = os.WriteFile(content, plainText, 0644)
 	if err != nil {
-		return fmt.Errorf("write file err: %v", err.Error())
+		return fmt.Errorf("failed to write decrypted file: %w", err)
 	}
 
 	return nil
